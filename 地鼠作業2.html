@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Don't go out!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Nunito:wght@700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+        }
+
+        body {
+            background-color: #FAB561;
+            margin: 0;
+            -webkit-user-select: none;
+        }
+
+        .container {
+            width: 100vw;
+            height: 100vh;
+            /* background-color: darkgrey; */
+            position: absolute;
+            /* top: 50%;
+            left: 20%; */
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 30px;
+            cursor: url('./img/1.png') 0 0, auto;
+        }
+
+        .container:active{
+            cursor: url('./img/2.png') 0 0, auto;
+            transition: 0.5s;
+
+        }
+
+        #game {
+            border-color: black;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -30%);
+            border-spacing: 0px 0px;
+        }
+
+
+        .hole {
+            width: 100px;
+            height: 100px;
+            visibility: hidden;
+            position: absolute;
+            top: 35%;
+            left:10%;
+        }
+
+        .title {
+            font-family: 'Lobster', cursive;
+            color: black;
+            font-size: 60pt;
+            text-align: center;
+            position: absolute;
+            top: 5%;
+            width: 650px;
+            left: calc(50% - 325px);
+            text-shadow: 0 0 10px rgb(255, 255, 255);
+
+        }
+
+        #btn-start {
+            position: absolute;
+            top: 18%;
+            left: calc(50% - 60px);
+            font-family: 'Nunito', sans-serif;
+            text-align: center;
+            width: 120px;
+            height: 40px;
+            font-size: 16pt;
+            background: rgb(72, 110, 0);
+            line-height: 40px;
+            border-radius: 7px;
+            letter-spacing: 4px;
+            color: #fff;
+            /* box-shadow: 0 0 10px #fff;
+            border: 1px solid #fff; */
+            transform: scale(1, 1);
+            transition: all 0.3s ease-out;
+        }
+
+        #btn-start:hover {
+            transform: scale(1.15, 1.15);
+            cursor: pointer;
+
+        }
+
+        .notclick {
+            pointer-events: none;
+        }
+
+        .movetext {
+            color: pink;
+            position: absolute;
+            font-size: 30px;
+            z-index: 99;
+            /* animation-name: move; */
+            /*transition: ;*/
+        }
+
+        .minus-text {
+            position: absolute;
+            top: 50px;
+            left: 10px;
+            color: red;
+            font-size: 30px;
+            font-weight: bolder;
+        }
+
+        .plus-text {
+            position: absolute;
+            top: 50px;
+            left: 10px;
+            color: white;
+            font-size: 30px;
+            font-weight: bolder;
+        }
+
+        @keyframes pop-up {
+            0% {
+                left: 30px;
+                top: 10px;
+                opaciy: 1;
+            }
+
+            100% {
+                left: 30px;
+                top: -60px;
+                opacity: 0;
+            }
+        }
+
+        .window {
+            width: 120px;
+            height: 180px;
+            position: absolute;
+            /* border: 1px solid #000; */
+            background: url('./img/win2.svg') no-repeat center/cover;
+        }
+
+        #w1 {
+            position: absolute;
+            top: 27%;
+            left: 33%;
+        }
+
+        #w2 {
+            position: absolute;
+            top: 27%;
+            left: 46%;
+        }
+
+        #w3 {
+            position: absolute;
+            top: 27%;
+            left: 59%;
+        }
+
+        #w4 {
+            position: absolute;
+            top: 50%;
+            left: 33%;
+        }
+
+        #w5 {
+            position: absolute;
+            top: 50%;
+            left: 46%;
+        }
+
+        #w6 {
+            position: absolute;
+            top: 50%;
+            left: 59%;
+        }
+
+        #w7 {
+            position: absolute;
+            top: 73%;
+            left: 33%;
+        }
+
+        #w8 {
+            position: absolute;
+            top: 73%;
+            left: 46%;
+        }
+
+        #w9 {
+            position: absolute;
+            top: 73%;
+            left: 59%;
+        }
+
+        .txt1{
+            position: absolute;
+            top: 50%;
+            left: 15%;
+            font-size: 25px;
+            font-family: 'Microsoft JhengHei';
+        }
+
+        .txt1::before{
+            content: '';
+            position: absolute;
+            background: #fff;
+            width: 120%;
+            height: 120%;
+            z-index: -1;
+            border-radius: 5px;
+            left: -9%;
+            top: -8%;
+        }
+
+        .txt2{
+            position: absolute;
+            top: 60%;
+            left: 15%;
+            font-size: 25px;
+            font-family: 'Microsoft JhengHei';
+            
+        }
+        .txt2::before{
+            content: '';
+            position: absolute;
+            background: #fff;
+            width: 120%;
+            height: 120%;
+            z-index: -1;
+            border-radius: 5px;
+            left: -9%;
+            top: -8%;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <p class="title">game</p>
+        <!-- <input type="bbutton" value="START" id="btn-start"> -->
+        <div id="btn-start">START</div>
+        <div id='game1'>
+            <div class="window" id='w1'>
+                <div class="hole" id="hole1"><img src="./img/p1.svg" width="100px"></div>
+            </div>
+            <div class="window" id='w2'>
+                <div class="hole" id="hole2"><img src="./img/p2.svg" width="100px"></div>
+            </div>
+            <div class="window" id='w3'>
+                <div class="hole" id="hole3"><img src="./img/p3.svg" width="100px"></div>
+            </div>
+            <div class="window" id='w4'>
+                <div class="hole" id="hole4"><img src="./img/p4.svg" width="100px"></div>
+            </div>
+            <div class="window" id='w5'>
+                <div class="hole" id="hole5"><img src="./img/p5.svg" width="100px"></div>
+            </div>
+            <div class="window" id='w6'>
+                <div class="hole" id="hole6"><img src="./img/p6.svg" width="100px"></div>
+            </div>
+            <div class="window" id='w7'>
+                <div class="hole" id="hole7"><img src="./img/p7.svg" width="100px"></div>
+            </div>
+            <div class="window" id='w8'>
+                <div class="hole" id="hole8"><img src="./img/p8.svg" width="100px"></div>
+            </div>
+            <div class="window" id='w9'>
+                <div class="hole" id="hole9"><img src="./img/p9.svg" width="100px"></div>
+            </div>
+        </div>
+
+
+        <!-- <table id="game" border="1">
+            <tr>
+                <td>
+                    <div class="hole" id="hole1"><img src="./img/p1.svg" width="100px"></div>
+                </td>
+                <td>
+                    <div class="hole" id="hole2"><img src="./img/p1.svg" width="100px"></div>
+                </td>
+                <td>
+                    <div class="hole" id="hole3"><img src="./img/p1.svg" width="100px"></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="hole" id="hole4"><img src="./img/p1.svg" width="100px"></div>
+                </td>
+                <td>
+                    <div class="hole" id="hole5"><img src="./img/p1.svg" width="100px"></div>
+                </td>
+                <td>
+                    <div class="hole" id="hole6"><img src="./img/p1.svg" width="100px"></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="hole" id="hole7"><img src="./img/p1.svg" width="100px"></div>
+                </td>
+                <td>
+                    <div class="hole" id="hole8"><img src="./img/p1.svg" width="100px"></div>
+                </td>
+                <td>
+                    <div class="hole" id="hole9"><img src="./img/p1.svg" width="100px"></div>
+                </td>
+            </tr>
+        </table> -->
+        
+        <span class="txt1">
+            剩餘時間 : <span id="time">10</span>
+        </span>
+        <span class="txt2">
+            目前分數 : <span id="score">0</span>
+        </span>
+    </div>
+
+
+    <script>
+        const hole1 = document.getElementById('hole1');
+        const btn_start = document.getElementById('btn-start');
+        const time = document.getElementById('time');
+        const score = document.getElementById('score');
+        const holes = document.getElementsByClassName('hole');
+        // const mytd = document.getElementsByTagName('td');
+        const windows = document.getElementsByClassName('window');
+        //console.log(mytd);
+
+        let mytime = 10;
+        let myscore = 0;
+        let ingame = false;
+        let timer = 0;
+        let comeout = 0;
+
+        function randTime(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function randnum(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function randPerson() {
+            return Math.floor(Math.random() * 9);
+        }
+
+
+        function appear() {
+            // holes >> 包目標物件( img )的 div 們
+            // 先隱藏所有圖片，並重置回原本的狀態
+            for (let i = 0; i < 9; i++) {
+                holes[i].firstChild.style.visibility = 'hidden';
+                holes[i].firstChild.setAttribute('src', `./img/p${parseInt(i)+1}.svg`);
+                holes[i].classList.remove('notclick');
+            }
+
+            // for (let i in holes) {
+            //     // console.log(person.firstChild);
+            //     console.log(i);
+            //     // console.log(holes[i].firstChild);
+            //     holes[i].firstChild.style.visibility = 'hidden';
+            //     holes[i].firstChild.setAttribute('src', `./img/p${parseInt(i) + 1}.svg`);
+            // }
+
+            // 隨機找幾個要產生目標物件的 div
+            let nums = [];
+
+            // 最多 4 個，最少一個
+            let items = randnum(1, 4);
+            while (nums.length < items) {
+                const rand = Math.floor(Math.random() * 9);
+                if (nums.includes(rand) == false) {
+                    nums.push(rand);
+                }
+            }
+            console.log(nums);
+            console.log(items);
+
+            //在選出的 div(窗) 裡讓目標出現
+            for (let i = 0; i < nums.length; i++) {
+                // 定義物件隨機出現的時間
+                const appearTime = randTime(773, 950);
+
+                // 讓 [ 隨機找幾個 ] 陣列索引值 2 以後的 div 顯示會扣分的目標物件
+                // 最多會有兩個扣分物件
+
+                if (i > 2) {
+                    holes[nums[i]].firstChild.setAttribute('src', `./img/m${nums[i]+1}.svg`);
+                    console.log(i, holes[nums[i]]);
+                    holes[nums[i]].firstChild.style.visibility = 'visible';
+                } else {
+                    holes[nums[i]].firstChild.style.visibility = 'visible';
+                }
+
+
+                // 出現隨機長度的時間後，讓目標都回到原本的圖片和隱藏狀態
+                setTimeout(() => {
+                    holes[nums[i]].firstChild.style.visibility = 'hidden';
+                    holes[nums[i]].firstChild.setAttribute('src', `./img/p${nums[i]+1}.svg`);
+                }, appearTime);
+            }
+
+        }
+
+        //遊戲開始 
+        btn_start.onclick = () => {
+
+            btn_start.classList.add("notclick");
+            // console.log(btn_start.classList);
+
+            // 重設新的一輪時間、分數
+            mytime = 10;
+            time.innerHTML = mytime;
+            myscore = 0;
+            score.innerText = myscore;
+            ingame = true;
+
+            //開始計時、開始讓目標出現 
+            timer = setInterval(game, 1500);
+            game();
+            comeout = setInterval(appear, randTime(600, 1000));
+            appear();
+
+        }
+
+        //console.log(holes[8]);
+        function game() {
+            // 每秒時間減ㄧ，並顯示
+            mytime--;
+            time.innerText = mytime;
+
+            //當時間到的時候 
+            if (mytime == 0) {
+                // 停止計時、停止讓目標出現
+                clearInterval(timer);
+                clearInterval(comeout);
+
+                ingame = false;
+                btn_start.classList.remove("notclick");
+
+                for (let person of holes) {
+                    person.firstChild.style.visibility = 'hidden';
+                }
+            }
+
+        }
+
+        function animation() {
+            const runkeyframes = ` @keyframes ball-run{
+                0%{
+                    left: 100px;
+                    top: 100px;
+                    opaciy:1;
+                }
+                100%{
+                    left: 100px;
+                    top: 10px;
+                    opacity:0;
+                }
+            }`
+
+            const style = document.getElementsByTagName('style')[0];
+            //console.log(style);
+
+            style.innerHTML += runkeyframes;
+        }
+
+        function plus_animate(i) {
+            // 產生一個加分動畫 div， 讓它顯示在相應的 div ，兩秒後移除加分顯示
+            let text = document.createElement('div');
+            text.innerText = "+100";
+            text.classList.add('plus-text');
+            text.style.animationName = 'pop-up';
+            text.style.animationDuration = '2s';
+
+            windows[i].appendChild(text);
+            console.log(windows[i], windows[i].children);
+            //console.log(person.children);
+
+            setTimeout(() => {
+                windows[i].children[1].remove();
+                //console.log(mytd[i].children);
+            }, 2000)
+        }
+
+        function minus_animate(i) {
+            // 產生一個扣分動畫 div， 讓它顯示在相應的 div ，兩秒後移除扣分顯示
+            let text = document.createElement('div');
+            text.innerText = "-50";
+            text.classList.add('minus-text');
+            text.style.animationName = 'pop-up';
+            text.style.animationDuration = '2s';
+
+            windows[i].appendChild(text);
+            console.log(windows[i], windows[i].children);
+            //console.log(person.children);
+
+            setTimeout(() => {
+                windows[i].children[1].remove();
+                //console.log(mytd[i].children);
+            }, 2000)
+        }
+
+        // holes >> 包目標物件( img )的 div
+        for (let i in holes) {
+            // 在 div 上加點擊事件
+            holes[i].onmousedown = function () {
+                let pic = this.firstChild.getAttribute('src');
+
+                switch (pic) {
+                    case './img/p1.svg':
+                        holes[i].classList.add('notclick');
+                        holes[i].firstChild.setAttribute('src', './img/m1.svg');
+                        myscore += 100;
+                        score.innerText = myscore;
+                        plus_animate(i);
+                        break;
+
+                    case './img/p2.svg':
+                        holes[i].classList.add('notclick');
+                        holes[i].firstChild.setAttribute('src', './img/m2.svg');
+                        myscore += 100;
+                        score.innerText = myscore;
+                        plus_animate(i);
+                        break;
+
+                    case './img/p3.svg':
+                        holes[i].classList.add('notclick');
+                        holes[i].firstChild.setAttribute('src', './img/m3.svg');
+                        myscore += 100;
+                        score.innerText = myscore;
+                        plus_animate(i);
+                        break;
+
+                    case './img/p4.svg':
+                        holes[i].firstChild.setAttribute('src', './img/m4.svg');
+                        holes[i].classList.add('notclick');
+                        myscore += 100;
+                        score.innerText = myscore;
+                        plus_animate(i);
+                        break;
+
+                    case './img/p5.svg':
+                        holes[i].firstChild.setAttribute('src', './img/m5.svg');
+                        holes[i].classList.add('notclick');
+                        myscore += 100;
+                        score.innerText = myscore;
+                        plus_animate(i);
+                        break;
+
+                    case './img/p6.svg':
+                        holes[i].firstChild.setAttribute('src', './img/m6.svg');
+                        holes[i].classList.add('notclick');
+                        myscore += 100;
+                        score.innerText = myscore;
+                        plus_animate(i);
+                        break;
+
+                    case './img/p7.svg':
+                        holes[i].firstChild.setAttribute('src', './img/m7.svg');
+                        holes[i].classList.add('notclick');
+                        myscore += 100;
+                        score.innerText = myscore;
+                        plus_animate(i);
+                        break;
+
+                    case './img/p8.svg':
+                        holes[i].firstChild.setAttribute('src', './img/m8.svg');
+                        holes[i].classList.add('notclick');
+                        myscore += 100;
+                        score.innerText = myscore;
+                        plus_animate(i);
+                        break;
+
+                    case './img/p9.svg':
+                        holes[i].firstChild.setAttribute('src', './img/m9.svg');
+                        holes[i].classList.add('notclick');
+                        myscore += 100;
+                        score.innerText = myscore;
+                        plus_animate(i);
+                        break;
+
+                    default:
+                        myscore -= 50;
+                        holes[i].classList.add('notclick');
+                        score.innerText = myscore;
+                        minus_animate(i);
+                        break;
+                }
+
+                /*// 如果點的是沒有戴口罩的人 
+                if (pic == './img/p1.svg' || pic == './img/p2.svg' || pic == './img/p3.svg' || pic == './img/p4.svg') {
+                    holes[i].firstChild.setAttribute('src', './img/m1.svg');
+                    // console.log(holes[i].firstChild.getAttribute('src'));
+
+                    // 加分、更新分數顯示
+                    myscore += 100;
+                    score.innerText = myscore;
+
+                    // 產生一個加分動畫 div， 讓它顯示在相應的 div ，兩秒後移除加分顯示
+                    let text = document.createElement('div');
+                    text.innerText = "+100";
+                    text.classList.add('plus-text');
+                    text.style.animationName = 'pop-up';
+                    text.style.animationDuration = '2s';
+
+                    windows[i].appendChild(text);
+                    console.log(windows[i], windows[i].children);
+                    //console.log(person.children);
+
+                    setTimeout(() => {
+                        windows[i].children[1].remove();
+                        //console.log(mytd[i].children);
+                    }, 2000)
+
+
+                } else {
+                    // console.log(mytd[i].getAttribute('src'));
+                    myscore -= 50;
+                    score.innerText = myscore;
+
+                    let text = document.createElement('div');
+                    text.innerText = "-50";
+                    text.classList.add('minus-text');
+                    text.style.animationName = 'pop-up';
+                    text.style.animationDuration = '2s';
+
+                    windows[i].appendChild(text);
+                    //console.log(person.children);
+
+                    setTimeout(() => {
+                        windows[i].children[1].remove();
+                        //console.log(mytd[i].children);
+                    }, 2000)
+
+                }*/
+            }
+        }
+
+
+
+
+
+
+
+    </script>
+</body>
+
+</html>
